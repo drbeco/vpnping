@@ -7,13 +7,13 @@ Ping nordvpn servers to find the best/fast for you
 - Download this script to the same directory where you unzipped all \*.ovpn files
 - Usage:
 
-    ./nordping.sh [-v] ( [-h|-V] | [-p TCP|UDP] )
+       ./nordping.sh [-v] ( [-h|-V] | [-p TCP|UDP] )
   
-    Options:
-      -h, --help       Show this help.
-      -V, --version    Show version.
-      -v, --verbose    Turn verbose mode on (cumulative).
-      -p, --protocol   Set the protocol to ping: TCP (default) or UDP
+       Options:
+         -h, --help       Show this help.
+         -V, --version    Show version.
+         -v, --verbose    Turn verbose mode on (cumulative).
+         -p, --protocol   Set the protocol to ping: TCP (default) or UDP
 
 
 ## Exit status:

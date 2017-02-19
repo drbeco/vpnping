@@ -108,7 +108,7 @@ main()
         fi
         IP=`echo $LIN | cut -d' ' -f2`
         DL=`ping -c3 -q $IP | tail -n2`
-        if grep "100% packet loss" <(echo $DL) ; then
+        if grep "100% packet loss" <(echo $DL) > /dev/null ; then
             echo $IP 3000.333 error
         else
             TI=`echo $DL | cut -d'/' -f5`

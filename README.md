@@ -4,10 +4,10 @@ Ping nordvpn servers to find the best/fast for you
 
 ## How to use:
 
-    - Download this script to the same directory where you unzipped all \*.ovpn files
-      
-**Usage: ./nordping.sh [-v] ( [-h|-V] | [-p TCP|UDP] )**
+- Download this script to the same directory where you unzipped all \*.ovpn files
+- Usage:
 
+    ./nordping.sh [-v] ( [-h|-V] | [-p TCP|UDP] )
   
     Options:
       -h, --help       Show this help.

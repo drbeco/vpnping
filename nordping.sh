@@ -22,6 +22,7 @@
 # *  rcb@beco.cc                                                           *
 # **************************************************************************
 
+# The help function
 Help()
 {
     cat << EOF
@@ -46,9 +47,8 @@ Help()
 EOF
     exit 1
 }
-# Another usage function example
-# usage() { echo "Usage: $0 [-h | -c] | [-a n -i m], being n>m" 1>&2; exit 1; }
 
+# The copyright function
 Copyr()
 {
     echo 'nordping - 20170218.210221'
@@ -61,7 +61,7 @@ Copyr()
     exit 1
 }
 
-# Example of a function
+# The main function
 main()
 {
     verbose=0
@@ -86,14 +86,6 @@ main()
         esac
     done
   
-    #if [ -z "$max" ] || [ -z "$min" ]; then
-    #    Help
-    #fi
-    #if [ "$max" -le "$min" ]; then
-    #    echo "Restriction: Max > Min"
-    #    exit 1
-    #fi
-
     echo Starting nordping.sh script, by beco, version 20170218.210221...
     echo Verbose level: $verbose
     date
@@ -123,12 +115,10 @@ main()
             echo $IP $TI
         fi
     done
-    #echo Bye main
 }
 
 #Calling main with all args
 main $*
-#echo Bye script
 exit 0
 
 #/* -------------------------------------------------------------------------- */

@@ -34,6 +34,7 @@ Help()
       -V, --version    Show version.
       -v, --verbose    Turn verbose mode on (cumulative).
       -p, --protocol   Set the protocol to ping: TCP (default) or UDP
+      -d, --directory  Sets the directory where to find all *.ovpn files
     Exit status:
        0, if ok.
        1, some error occurred.
@@ -65,8 +66,9 @@ Copyr()
 main()
 {
     verbose=0
+    DIR="."
     #getopt example with switch/case
-    while getopts "hVvp:" FLAG; do
+    while getopts "hVvp:d:" FLAG; do
         case $FLAG in
             h)
                 Help
@@ -79,6 +81,9 @@ main()
                 ;;
             p)
                 QNPROTO=$OPTARG
+                ;;
+            d)
+                DIR=$OPTARG
                 ;;
             *)
                 Help
@@ -100,7 +105,8 @@ main()
         echo "Protocol: $QPROTO"
     fi
 
-    for F in *.ovpn ; do 
+    for F in "$DIR"/*.ovpn ; do 
+        [ ! -e $F ] && echo 'Please give a path with ovpn files' && break
         LIN=`grep "remote " $F`
         PROTO=`echo $LIN | cut -d' ' -f3`
         if [ "$PROTO" != "$QPROTO" ]; then

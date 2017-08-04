@@ -91,7 +91,7 @@ main()
         esac
     done
   
-    echo Starting nordping.sh script, by beco, version 20170218.210221...
+    echo Starting nordping.sh script, by beco, version 20170804.014727...
     echo Verbose level: $verbose
     date
 

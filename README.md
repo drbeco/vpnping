@@ -27,5 +27,6 @@ Ping nordvpn servers to find the best/fast for you
 ## Author
       Written by Ruben Carlo Benante <rcb@beco.cc>  
       Date: 2017-02-18
+      Modified: 2017-08-04
 
 

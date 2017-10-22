@@ -17,7 +17,9 @@
 # *  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 # **************************************************************************
 
+# Fetch the .ovpn files from NordVPN
 wget https://nordvpn.com/api/files/zip -O config.zip
+# Unzip into a folder
 unzip config.zip -d vpn
 # Remove VPNs from countries with mass surveilance programs ("Five Eyes", "Nine Eyes", "Fourteen Eyes")
 # http://www.giswatch.org/en/communications-surveillance/unmasking-five-eyes-global-surveillance-practices
@@ -36,3 +38,5 @@ unzip config.zip -d vpn
 # 13. Spain
 # 14. Sweden
 find vpn -type f -name '[au|ca|nz|uk|us|dk|fr|fx|nl|an|no|be|de|it|es|se]*.ovpn' | xargs rm
+
+rm config.zip

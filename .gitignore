@@ -1,3 +1,8 @@
 # ignore ovpn files here and in the vpn dir
 *.ovpn
 
+# ignore vim backup files
+.*
+*.~
+*.bkp
+

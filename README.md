@@ -19,7 +19,7 @@ Ping nordvpn servers to find the best/fast for you
          -p, --protocol   Set the protocol to ping: TCP (default) or UDP
          -d, --directory  Set the path where to find ovpn files
          -f, --filter     Filter by prefix
-         -w, --wget       Download ovpn files to ./vpn directory (not implemented)
+         -w, --wget       Download ovpn files to directory ./ovpn-files
 ```
 
 ## Exit status:

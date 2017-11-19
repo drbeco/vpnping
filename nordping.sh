@@ -68,6 +68,7 @@ main()
 {
     verbose=0
     DIR="."
+    PREFIX=""
     #getopt example with switch/case
     while getopts "hVvp:d:f:" FLAG; do
         case $FLAG in

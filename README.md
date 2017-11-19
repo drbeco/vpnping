@@ -18,6 +18,8 @@ Ping nordvpn servers to find the best/fast for you
          -v, --verbose    Turn verbose mode on (cumulative).
          -p, --protocol   Set the protocol to ping: TCP (default) or UDP
          -d, --directory  Set the path where to find ovpn files
+         -f, --filter     Filter by prefix
+         -w, --wget       Download ovpn files to ./vpn directory (not implemented)
 ```
 
 ## Exit status:
@@ -27,6 +29,6 @@ Ping nordvpn servers to find the best/fast for you
 ## Author
       Written by Ruben Carlo Benante <rcb@beco.cc>  
       Date: 2017-02-18
-      Modified: 2017-08-04
+      Modified: 2017-11-18
 
 

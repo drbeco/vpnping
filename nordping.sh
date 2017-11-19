@@ -36,9 +36,9 @@ Help()
       -V, --version    Show version.
       -v, --verbose    Turn verbose mode on (cumulative).
       -p, --protocol   Set the protocol to ping: TCP (default) or UDP
-      -d, --directory  Sets the directory where to find all *.ovpn files
+      -d, --directory  Sets the directory where to find all *.ovpn files (defaults to ./ovpn-files)
       -f, --filter     Filter by prefix
-      -w, --wget       Download ovpn files from nordvpn site
+      -w, --wget       Download ovpn files from nordvpn site to directory ./ovpn-files
     Exit status:
        0, if ok.
        1, some error occurred.
@@ -113,7 +113,7 @@ Download()
 main()
 {
     verbose=0
-    DIR="."
+    DIR="./ovpn-files"
     PREFIX=""
     #getopt example with switch/case
     while getopts "hVvp:d:f:w" FLAG; do
@@ -160,7 +160,7 @@ main()
     fi
 
     for F in "$DIR"/"$PREFIX"*.ovpn ; do 
-        [ ! -e $F ] && echo 'Please give a path with ovpn files' && break
+        [ ! -e $F ] && echo -e 'Please give a valid path to where you downloaded ovpn files.\n(Try "-w" to automatically download them first or "-h" for help.)' && break
         LIN=`grep "remote " $F`
         PROTO=`echo $LIN | cut -d' ' -f3`
         if [ "$PROTO" != "$QPROTO" ]; then

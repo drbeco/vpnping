@@ -22,6 +22,8 @@
 # *  rcb@beco.cc                                                           *
 # **************************************************************************
 
+VERSION="20171118.225122"
+
 # The help function
 Help()
 {
@@ -36,6 +38,7 @@ Help()
       -p, --protocol   Set the protocol to ping: TCP (default) or UDP
       -d, --directory  Sets the directory where to find all *.ovpn files
       -f, --filter     Filter by prefix
+      -w, --wget       Download ovpn files from nordvpn site
     Exit status:
        0, if ok.
        1, some error occurred.
@@ -45,7 +48,7 @@ Help()
   
     Author:
             Written by Ruben Carlo Benante <rcb@beco.cc>  
-            2017-02-18         
+            Created: 2017-02-18         
 EOF
     exit 1
 }
@@ -53,7 +56,7 @@ EOF
 # The copyright function
 Copyr()
 {
-    echo 'nordping - 20170218.210221'
+    echo "nordping - ${VERSION}"
     echo
     echo 'Copyright (C) 2017 Ruben Carlo Benante <rcb@beco.cc>, GNU GPL version 2'
     echo '<http://gnu.org/licenses/gpl.html>. This  is  free  software:  you are free to change and'
@@ -63,6 +66,49 @@ Copyr()
     exit 1
 }
 
+# The download function
+Download()
+{
+    echo "Starting nordping.sh script, by beco, version ${VERSION}..."
+    echo "Verbose level: $verbose"
+    date
+    TRUST="no"
+    wget -q --show-progress https://nordvpn.com/api/files/zip -O config.zip || { echo "Can not download ovpn files" ; exit 1 ; }
+    md5sum -c --status config.zip.md5
+    SQ=$?
+    if (( "10#0${SQ}" != 0 )) ; then
+        echo "Cannot verify the md5sum signature. File corrupted or changed."
+        echo "Type 'yes' only if you are sure in the next 15 seconds."
+        read -t 15 -p "Do you trust the new file? " TRUST
+        echo
+    else
+        echo "md5sum signature checked OK"
+        TRUST="sureOK"
+    fi
+    if [[ "${TRUST}" == "yes" || "${TRUST}" == "sureOK" ]] ; then
+        unzip config.zip -d ovpn-files
+        echo "Downloaded and unzipped successfuly"
+        if [[ "${TRUST}" != "sureOK" ]] ; then
+            echo
+            echo "Warning: using a non-validated md5sum file"
+            echo "Please report an issue (subject new md5sum) at https://github.com/drbeco/nordping"
+            echo "New md5sum:"
+            md5sum config.zip
+            echo "Old mdrsum:"
+            cat config.zip.md5 | grep config.zip
+            echo
+            rm -rf config.zip
+            exit 1
+        fi
+        rm -rf config.zip
+        exit 0
+    else
+        rm -rf config.zip
+        echo "Download/installation aborted"
+        exit 1
+    fi
+}
+
 # The main function
 main()
 {
@@ -70,7 +116,7 @@ main()
     DIR="."
     PREFIX=""
     #getopt example with switch/case
-    while getopts "hVvp:d:f:" FLAG; do
+    while getopts "hVvp:d:f:w" FLAG; do
         case $FLAG in
             h)
                 Help
@@ -90,14 +136,17 @@ main()
             f)
                 PREFIX=$OPTARG
                 ;;
+            w)
+                Download
+                ;;
             *)
                 Help
                 ;;
         esac
     done
   
-    echo Starting nordping.sh script, by beco, version 20170804.014727...
-    echo Verbose level: $verbose
+    echo "Starting nordping.sh script, by beco, version ${VERSION}"...
+    echo "Verbose level: $verbose"
     date
 
     if [ "$QNPROTO" == "UDP" ]; then

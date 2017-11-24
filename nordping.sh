@@ -188,11 +188,13 @@ main()
         
         echo -en "$PFI $PIP $PAV"
         if [ "$PAV" == "3000.33" ] ; then
-            echo -n "  error"
+            echo "  error"
         fi
-        echo
     else
-        echo -e "$F \t $IP \t $TI"
+        echo -en "$F \t $IP \t $TI"
+        if [ "$TI" == "3000.33" ] ; then
+            echo -e " \t error"
+        fi
     fi
     done
 }

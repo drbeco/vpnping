@@ -30,7 +30,7 @@ Help()
     cat << EOF
     nordping - Ping a bunch of NordVPN servers to test the fastest
     Usage: ${1} [-v] ( [-h|-V] | [-p TCP|UDP ] )
-  
+
     Options:
       -h, --help       Show this help.
       -V, --version    Show version.
@@ -42,13 +42,13 @@ Help()
     Exit status:
        0, if ok.
        1, some error occurred.
-  
+
     Todo:
             Long options not implemented yet.
-  
+
     Author:
-            Written by Ruben Carlo Benante <rcb@beco.cc>  
-            Created: 2017-02-18         
+            Written by Ruben Carlo Benante <rcb@beco.cc>
+            Created: 2017-02-18
 EOF
     exit 1
 }
@@ -144,7 +144,7 @@ main()
                 ;;
         esac
     done
-  
+
     if [ "$verbose" -gt "0" ] ; then
         echo "Starting nordping.sh script, by beco, version ${VERSION}"...
         echo "Verbose level: $verbose"
@@ -164,7 +164,7 @@ main()
         echo "ovpn file                                          protocol           average  timeout"
     fi
 
-    for F in "$DIR"/"$PREFIX"*.ovpn ; do 
+    for F in "$DIR"/"$PREFIX"*.ovpn ; do
         [ ! -e $F ] && echo -e 'Please give a valid path to where you downloaded ovpn files.\n(Try "-w" to automatically download them first or "-h" for help.)' && break
         LIN=`grep "remote " $F`
         PROTO=`echo $LIN | cut -d' ' -f3`
@@ -180,22 +180,23 @@ main()
             TI=`echo $DL | cut -d'/' -f5`
         fi
 
-    if [ "$verbose" -gt "0" ]; then
-        # formatted output
-        PFI=`printf '%-50s' "$F"`
-        PIP=`printf '%-18s' "$IP"`
-        PAV=`printf '%-7s' $TI`
-        
-        echo -en "$PFI $PIP $PAV"
-        if [ "$PAV" == "3000.33" ] ; then
-            echo "  error"
+        if [ "$verbose" -gt "0" ]; then
+            # formatted output
+            PFI=`printf '%-50s' "$F"`
+            PIP=`printf '%-18s' "$IP"`
+            PAV=`printf '%-7s' $TI`
+
+            echo -en "$PFI $PIP $PAV"
+            if [ "$PAV" == "3000.33" ] ; then
+                echo -n "  error"
+            fi
+        else
+            echo -en "$F \t $IP \t $TI"
+            if [ "$TI" == "3000.33" ] ; then
+                echo -en " \t error"
+            fi
         fi
-    else
-        echo -en "$F \t $IP \t $TI"
-        if [ "$TI" == "3000.33" ] ; then
-            echo -e " \t error"
-        fi
-    fi
+        echo
     done
 }
 

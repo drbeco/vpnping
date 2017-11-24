@@ -145,9 +145,11 @@ main()
         esac
     done
   
-    echo "Starting nordping.sh script, by beco, version ${VERSION}"...
-    echo "Verbose level: $verbose"
-    date
+    if [ "$verbose" -gt "0" ] ; then
+        echo "Starting nordping.sh script, by beco, version ${VERSION}"...
+        echo "Verbose level: $verbose"
+        date
+    fi
 
     if [ "$QNPROTO" == "UDP" ]; then
         QPROTO="1194"
@@ -157,6 +159,9 @@ main()
 
     if [ "$verbose" -gt "0" ]; then
         echo "Protocol: $QPROTO"
+    fi
+    if [ "$verbose" -gt "1" ] ; then
+        echo "ovpn file                                          protocol           average  timeout"
     fi
 
     for F in "$DIR"/"$PREFIX"*.ovpn ; do 
@@ -168,12 +173,27 @@ main()
         fi
         IP=`echo $LIN | cut -d' ' -f2`
         DL=`ping -c3 -q $IP | tail -n2`
+
         if grep "100% packet loss" <(echo $DL) > /dev/null ; then
-            echo -e "$F \t $IP \t 3000.333 \t error"
+            TI="3000.33"
         else
             TI=`echo $DL | cut -d'/' -f5`
-            echo -e "$F \t $IP \t $TI"
         fi
+
+    if [ "$verbose" -gt "0" ]; then
+        # formatted output
+        PFI=`printf '%-50s' "$F"`
+        PIP=`printf '%-18s' "$IP"`
+        PAV=`printf '%-7s' $TI`
+        
+        echo -en "$PFI $PIP $PAV"
+        if [ "$PAV" == "3000.33" ] ; then
+            echo -n "  error"
+        fi
+        echo
+    else
+        echo -e "$F \t $IP \t $TI"
+    fi
     done
 }
 

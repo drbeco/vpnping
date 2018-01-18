@@ -7,6 +7,8 @@ Ping nordvpn servers to find the best/fast for you
 - Download this script to the same directory where you unzipped all \*.ovpn files
     - Optional: you may want to keep the script in the `$PATH`, but you must run it from the working directory where the \*.ovpn files are
 
+- New `-e` key, prints also at stderr output, so you can easely pipe stdout to a sort command and still keeps track of progress
+
 - Usage:
 
        ``./nordping.sh [-v] ( [-h|-V] | [-p TCP|UDP] [-d PATH] )``
@@ -20,6 +22,7 @@ Ping nordvpn servers to find the best/fast for you
          -d, --directory  Set the path where to find ovpn files
          -f, --filter     Filter by prefix
          -w, --wget       Download ovpn files to directory ./ovpn-files
+         -e, --stderr     Print also to stderr. Useful if piping, e.g.: $ ./nordping.sh | sort -nk3
 ```
 
 ## Exit status:

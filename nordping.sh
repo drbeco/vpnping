@@ -29,7 +29,7 @@ Help()
 {
     cat << EOF
     nordping - Ping a bunch of NordVPN servers to test the fastest
-    Usage: ${1} [-v] ( [-h|-V] | [-p TCP|UDP ] )
+    Usage: $ ./nordping.sh [-v] ( [-h|-V] | [-p TCP|UDP ] )
 
     Options:
       -h, --help       Show this help.
@@ -39,6 +39,7 @@ Help()
       -d, --directory  Sets the directory where to find all *.ovpn files (defaults to ./ovpn-files)
       -f, --filter     Filter by prefix
       -w, --wget       Download ovpn files from nordvpn site to directory ./ovpn-files
+      -e, --stderr     Print also to stderr. Useful if piping, e.g.: $ ./nordping.sh | sort -nk3
     Exit status:
        0, if ok.
        1, some error occurred.
@@ -115,8 +116,9 @@ main()
     verbose=0
     DIR="./ovpn-files"
     PREFIX=""
+    PRERR=0
     #getopt example with switch/case
-    while getopts "hVvp:d:f:w" FLAG; do
+    while getopts "hVvp:d:f:we" FLAG; do
         case $FLAG in
             h)
                 Help
@@ -138,6 +140,9 @@ main()
                 ;;
             w)
                 Download
+                ;;
+            e)
+                PRERR=1
                 ;;
             *)
                 Help
@@ -187,16 +192,31 @@ main()
             PAV=`printf '%-7s' $TI`
 
             echo -en "$PFI $PIP $PAV"
+            if [ "$PRERR" -eq "1" ]; then
+                >&2 echo -en "$PFI $PIP $PAV"
+            fi
             if [ "$PAV" == "3000.33" ] ; then
                 echo -n "  error"
+                if [ "$PRERR" -eq "1" ]; then
+                    >&2 echo -n "  error"
+                fi
             fi
         else
             echo -en "$F \t $IP \t $TI"
+            if [ "$PRERR" -eq "1" ]; then
+                >&2 echo -en "$F \t $IP \t $TI"
+            fi
             if [ "$TI" == "3000.33" ] ; then
                 echo -en " \t error"
+                if [ "$PRERR" -eq "1" ]; then
+                    >&2 echo -en " \t error"
+                fi
             fi
         fi
         echo
+        if [ "$PRERR" -eq "1" ]; then
+            >&2 echo
+        fi
     done
 }
 

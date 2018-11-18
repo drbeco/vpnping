@@ -75,7 +75,7 @@ Download()
     date
     TRUST="no"
     wget -q --show-progress https://nordvpn.com/api/files/zip -O config.zip || { echo "Can not download ovpn files" ; exit 1 ; }
-    md5sum -c --status config.zip.md5
+    md5sum --check  config.zip.md5 # or path to MD5 key for ovpn zip
     SQ=$?
     if (( "10#0${SQ}" != 0 )) ; then
         echo "Cannot verify the md5sum signature. File corrupted or changed."

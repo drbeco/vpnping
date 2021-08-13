@@ -192,8 +192,14 @@ main()
 
     if [ "$verbose" -gt "1" ] ; then
         echo "Using $VPNSERVER VPN server"
-        DIR="./ovpn-$VPNSERVER"
     fi
+
+    if [ "$VPNSERVER" != "shark" ] && [ "$VPNSERVER" != "nord" ] ; then
+        echo "Only use with -s shark or -s nord"
+        exit 1
+    fi
+    DIR="./ovpn-$VPNSERVER"
+
     if [ "$verbose" -gt "0" ]; then
         echo "Protocol: $QPROTO"
     fi

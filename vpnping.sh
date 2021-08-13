@@ -38,11 +38,11 @@ Help()
       -V, --version    Show version.
       -v, --verbose    Turn verbose mode on (cumulative).
       -p, --protocol   Set the protocol to ping: tcp (default) or udp (lower case)
-      -d, --directory  Sets the directory where to find all *.ovpn files (defaults to ./ovpn-files)
       -f, --filter     Filter by prefix
       -w, --wget       Download ovpn files from nordvpn site to directory ./ovpn-nord or surfshark to ./ovpn-shark
       -e, --stderr     Print also to stderr. Useful if piping, e.g.: $ ./vpnping.sh | sort -nk3
-      -s, --server     Currently available options: -s shark or -s nord
+      -s, --server     Currently available options: -s shark or -s nord (defaults to shark)
+      -d, --directory  Sets the directory where to find all *.ovpn files (defaults to ./ovpn-shark)
 
     Example:
         Example of a command: 
@@ -91,7 +91,7 @@ Download()
     TRUST="no"
 
     if [ "$VPNSERVER" == "nord" ] ; then
-        wget -q --show-progress https://nordvpn.com/api/files/zip -O config.zip || { echo "Can not download ovpn files" ; exit 1 ; }
+        wget -q --show-progress https://nordvpn.com/api/files/zip -O nord-config.zip || { echo "Can not download nord ovpn files. NordVPN changed its policy. Now you have to download manually, one by one, the files you want to test. Put them into ./ovpn-nord/ directory." ; exit 1 ; }
         md5sum -c --status config.zip.md5
         SQ=$?
         if (( "10#0${SQ}" != 0 )) ; then
@@ -103,28 +103,32 @@ Download()
             echo "md5sum signature checked OK"
             TRUST="sureOK"
         fi
-        if [[ "${TRUST}" == "yes" || "${TRUST}" == "sureOK" ]] ; then
-            unzip config.zip -d ovpn-$VPNSERVER
-            echo "Downloaded and unzipped successfuly"
-            if [[ "${TRUST}" != "sureOK" ]] ; then
-                echo
-                echo "Warning: using a non-validated md5sum file"
-                echo "Please report an issue (subject new md5sum) at https://github.com/drbeco/vpnping"
-                echo "New md5sum:"
-                md5sum config.zip
-                echo "Old mdrsum:"
-                cat config.zip.md5 | grep config.zip
-                echo
-                rm -rf config.zip
-                exit 1
-            fi
+    else # surfshark
+        wget -q --show-progress https://my.surfshark.com/vpn/api/v1/server/configurations -O shark-config.zip || { echo "Can not download shark ovpn files" ; exit 1 ; }
+            echo "md5sum signature not checked"
+            TRUST="sureOK"
+    fi
+    if [[ "${TRUST}" == "yes" || "${TRUST}" == "sureOK" ]] ; then
+        unzip $VPNSERVER-config.zip -d ovpn-$VPNSERVER
+        echo "Downloaded and unzipped successfuly"
+        if [[ "${TRUST}" != "sureOK" ]] ; then
+            echo
+            echo "Warning: using a non-validated md5sum file"
+            echo "Please report an issue (subject new md5sum) at https://github.com/drbeco/vpnping"
+            echo "New md5sum:"
+            md5sum config.zip
+            echo "Old mdrsum:"
+            cat config.zip.md5 | grep config.zip
+            echo
             rm -rf config.zip
-            exit 0
-        else
-            rm -rf config.zip
-            echo "Download/installation aborted"
             exit 1
         fi
+        rm -rf config.zip
+        exit 0
+    else
+        rm -rf config.zip
+        echo "Download/installation aborted"
+        exit 1
     fi
 }
 
@@ -137,6 +141,7 @@ main()
     PRERR=0
     VPNSERVER="shark"
     QNPROTO="tcp"
+    calldownload=0
     #getopt example with switch/case
     while getopts "hVvp:d:f:wes:" FLAG; do
         case $FLAG in
@@ -162,7 +167,7 @@ main()
                 VPNSERVER=$OPTARG
                 ;;
             w)
-                Download
+                calldownload=1
                 ;;
             e)
                 PRERR=1
@@ -194,6 +199,10 @@ main()
     fi
     if [ "$verbose" -gt "1" ] ; then
         echo "ovpn file                                          protocol           average  timeout"
+    fi
+    if [ "$calldownload" -eq "1" ] ; then
+        Download
+        exit 0
     fi
 
     for F in "$DIR"/"$PREFIX"*"$QNPROTO"*.ovpn ; do

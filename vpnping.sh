@@ -31,7 +31,7 @@ Help()
 {
     cat << EOF
     vpnping - Ping a bunch of VPNs ovpn file (such as SurfShark VPN or NordVPN) servers to test the fastest ping response
-    Usage: $ ./vpnping.sh [-v] ( [-h|-V] | [-p TCP|UDP ] )
+    Usage: $ ./vpnping.sh [-v] ( [-h|-V] | [-p TCP|UDP ] [-d PATH] )
 
     Options:
       -h, --help       Show this help.
